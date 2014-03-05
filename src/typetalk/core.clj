@@ -147,9 +147,19 @@
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
-(defn get-mentions [access_token &options]
-  (println "not implemented"))
+(defn get-mentions [access_token & options]
+  "scope: my"
+  (let [res (http/get
+              (str "https://typetalk.in/api/v1/mentions")
+              {:headers {"Authorization" (str "Bearer " access_token)}}
+              {:query-params (hash-map options)})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
 
 (defn mark-mention-as-read [access_token mention]
-  (println "not implemented"))
-
+  "scope: my"
+  (let [res (http/put
+              (str "https://typetalk.in/api/v1/mentions/" (mention "id"))
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
