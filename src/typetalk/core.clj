@@ -35,3 +35,10 @@
     (if (= 200 (:status res))
       (-> (json/read-str (:body res))
         (topics-response->topics)))))
+
+(defn posts [access_token topic]
+  (let [res (http/get
+              (str "https://typetalk.in/api/v1/topics/" (topic "id"))
+              {:query-params {:access_token access_token}})]
+    (if (= 200 (:status res))
+      ((json/read-str (:body res)) "posts"))))
