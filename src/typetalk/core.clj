@@ -42,25 +42,20 @@
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
-(defn- topics-response->topics [json]
-  (let [arr (json "topics")]
-    (map #(% "topic") arr)))
-
 (defn get-topics [access_token]
   "Fetch topics"
   (let [res (http/get
               "https://typetalk.in/api/v1/topics"
               {:query-params {:access_token access_token}})]
     (if (= 200 (:status res))
-      (-> (json/read-str (:body res))
-        (topics-response->topics)))))
+      (json/read-str (:body res)))))
 
 (defn get-posts [access_token topic]
   (let [res (http/get
               (str "https://typetalk.in/api/v1/topics/" (topic "id"))
               {:query-params {:access_token access_token}})]
     (if (= 200 (:status res))
-      ((json/read-str (:body res)) "posts"))))
+      (json/read-str (:body res)) "posts")))
 
 (defn create-post [access_token topic message]
   (let [res (http/post
