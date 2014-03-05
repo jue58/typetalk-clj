@@ -1,5 +1,6 @@
 (ns typetalk.core
   (:require [clj-http.client :as http]
+            [clj-http.util :as http-util]
             [clojure.data.json :as json]))
 
 (defn get-access-token [client_id client_secret scope]
@@ -14,6 +15,11 @@
         body (:body res)]
     (if (= status 200)
       (json/read-str body))))
+
+(defn authorization-url [client_id redirect_uri scope]
+  (format "https://typetalk.in/oauth2/authorize?client_id=%s&redirect_uri=%s&scope=code"
+          (http-util/url-encode client_id)
+          (http-util/url-encode redirect_uri)))
 
 (defn refresh-access-token [client_id client_secret refresh_token]
   (let [res (http/post
