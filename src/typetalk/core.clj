@@ -99,10 +99,20 @@
       (json/read-str (:body res)))))
 
 (defn create-favorite [access_token topic]
-  (println "not implemented"))
+  "scope: my"
+  (let [res (http/post
+              (format "https://typetalk.in/api/v1/topics/%s/favorite" (topic "id"))
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
+    (if (= (:status res) 200)
+      (json/read-str (:body res)))))
 
 (defn delete-favorite [access_token topic]
-  (println "not implemented"))
+  "scope: my"
+  (let [res (http/delete
+              (format "https://typetalk.in/api/v1/topics/%s/favorite" (topic "id"))
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
+    (if (= (:status res) 200)
+      (json/read-str (:body res)))))
 
 (defn get-notifications [access_token]
   (println "not implemented"))
