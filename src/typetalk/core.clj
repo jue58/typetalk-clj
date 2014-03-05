@@ -51,20 +51,20 @@
     (if (= (:status res) 200)
       (json/read-str (:body res)))))
 
-(defn get-post [access_token topic post]
+(defn get-post [access_token post]
   (let [res (http/get
-              (str "https://typetalk.in/api/v1/topics/" (topic "id") "/posts/" (post "id"))
+              (str "https://typetalk.in/api/v1/topics/" (post "topicId") "/posts/" (post "id"))
               {:query-params {:access_token access_token}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
-(defn delete-post [access_id topic post]
+(defn delete-post [access_id post]
   (println "not implemented"))
 
-(defn create-like [access_id topic post]
+(defn create-like [access_id post]
   (println "not implemented"))
 
-(defn delete-like [access_id topic post]
+(defn delete-like [access_id post]
   (println "not implemented"))
 
 (defn create-favorite [access_id topic]
@@ -79,10 +79,10 @@
 (defn open-notifications [access_id]
   (println "not implemented"))
 
-(defn mark-topic-as-read
-  [access_id topic]
-  (println "not implemented")
-  [access_id topic post]
+(defn mark-topic-as-read [access_id topic]
+  (println "not implemented"))
+
+(defn mark-post-as-read [access_id post]
   (println "not implemented"))
 
 (defn get-mentions [access_id &options]
