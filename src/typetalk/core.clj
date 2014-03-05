@@ -80,10 +80,23 @@
       (json/read-str (:body res)))))
 
 (defn create-like [access_token post]
-  (println "not implemented"))
+  "Adds LIKE to a post
+   scope: topic.post"
+  (let [res (http/post
+              (format "https://typetalk.in/api/v1/topics/%s/posts/%s/like" (post "topicId") (post "id"))
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
+    (if (= (:status res) 200)
+      (json/read-str (:body res)))))
 
 (defn delete-like [access_token post]
-  (println "not implemented"))
+  "Deletes LIKE to a post
+   scope: topic.post"
+  (let [res (http/delete
+              (format "https://typetalk.in/api/v1/topics/%s/posts/%s/like" (post "topicId") (post "id"))
+              {:form-params
+                {:access_token access_token}})]
+    (if (= (:status res) 200)
+      (json/read-str (:body res)))))
 
 (defn create-favorite [access_token topic]
   (println "not implemented"))
