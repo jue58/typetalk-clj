@@ -124,15 +124,15 @@
 (defn open-notifications [access_token topic &]
   "scope: my"
   (let [res (http/put
-              (str "https://typetalk.in/api/v1/bookmark/open")
+              (str "https://typetalk.in/api/v1/notifications/open")
               {:headers {"Authorization" (str "Bearer " access_token)}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
 (defn mark-topic-as-read [access_token topic]
   "scope: my"
-  (let [res (http/put
-              (str "https://typetalk.in/api/v1/bookmark/open")
+  (let [res (http/post
+              (str "https://typetalk.in/api/v1/bookmark/save")
               {:headers {"Authorization" (str "Bearer " access_token)}}
               {:form-params {:topicId (topic "id")}})]
     (if (= 200 (:status res))
@@ -140,8 +140,8 @@
 
 (defn mark-post-as-read [access_token post]
   "scope: my"
-  (let [res (http/put
-              (str "https://typetalk.in/api/v1/bookmark/open")
+  (let [res (http/post
+              (str "https://typetalk.in/api/v1/bookmark/save")
               {:headers {"Authorization" (str "Bearer " access_token)}}
               {:form-params {:topicId (post "topicId") :postId (post "id")}})]
     (if (= 200 (:status res))
