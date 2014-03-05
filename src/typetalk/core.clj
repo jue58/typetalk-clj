@@ -15,6 +15,19 @@
     (if (= status 200)
       (json/read-str body))))
 
+(defn refresh-access-token [client_id client_secret refresh_token]
+  (let [res (http/post
+              "https://typetalk.in/oauth2/access_token"
+              {:form-params
+                {:client_id client_id
+                 :client_secret client_secret
+                 :grant_type "refresh_token"
+                 :refresh_token refresh_token}})
+        status (:status res)
+        body (:body res)]
+    (if (= status 200)
+      (json/read-str body))))
+
 (defn get-profile [access_token]
   "Fetch the user profile of the user who got the given access token"
   (let [res (http/get
