@@ -93,8 +93,7 @@
    scope: topic.post"
   (let [res (http/delete
               (format "https://typetalk.in/api/v1/topics/%s/posts/%s/like" (post "topicId") (post "id"))
-              {:form-params
-                {:access_token access_token}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
     (if (= (:status res) 200)
       (json/read-str (:body res)))))
 
@@ -115,16 +114,38 @@
       (json/read-str (:body res)))))
 
 (defn get-notifications [access_token]
-  (println "not implemented"))
+  "scope: my"
+  (let [res (http/get
+              (str "https://typetalk.in/api/v1/notifications/status")
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
 
-(defn open-notifications [access_token]
-  (println "not implemented"))
+(defn open-notifications [access_token topic &]
+  "scope: my"
+  (let [res (http/put
+              (str "https://typetalk.in/api/v1/bookmark/open")
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
 
 (defn mark-topic-as-read [access_token topic]
-  (println "not implemented"))
+  "scope: my"
+  (let [res (http/put
+              (str "https://typetalk.in/api/v1/bookmark/open")
+              {:headers {"Authorization" (str "Bearer " access_token)}}
+              {:form-params {:topicId (topic "id")}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
 
 (defn mark-post-as-read [access_token post]
-  (println "not implemented"))
+  "scope: my"
+  (let [res (http/put
+              (str "https://typetalk.in/api/v1/bookmark/open")
+              {:headers {"Authorization" (str "Bearer " access_token)}}
+              {:form-params {:topicId (post "topicId") :postId (post "id")}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
 
 (defn get-mentions [access_token &options]
   (println "not implemented"))
