@@ -58,36 +58,40 @@
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
-(defn delete-post [access_id post]
+(defn delete-post [access_token post]
+  (let [res (http/delete
+              (str "https://typetalk.in/api/v1/topics/" (post "topicId") "/posts/" (post "id"))
+              {:query-params {:access_token access_token}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
+
+(defn create-like [access_token post]
   (println "not implemented"))
 
-(defn create-like [access_id post]
+(defn delete-like [access_token post]
   (println "not implemented"))
 
-(defn delete-like [access_id post]
+(defn create-favorite [access_token topic]
   (println "not implemented"))
 
-(defn create-favorite [access_id topic]
+(defn delete-favorite [access_token topic]
   (println "not implemented"))
 
-(defn delete-favorite [access_id topic]
+(defn get-notifications [access_token]
   (println "not implemented"))
 
-(defn get-notifications [access_id]
+(defn open-notifications [access_token]
   (println "not implemented"))
 
-(defn open-notifications [access_id]
+(defn mark-topic-as-read [access_token topic]
   (println "not implemented"))
 
-(defn mark-topic-as-read [access_id topic]
+(defn mark-post-as-read [access_token post]
   (println "not implemented"))
 
-(defn mark-post-as-read [access_id post]
+(defn get-mentions [access_token &options]
   (println "not implemented"))
 
-(defn get-mentions [access_id &options]
-  (println "not implemented"))
-
-(defn mark-mention-as-read [access_id mention]
+(defn mark-mention-as-read [access_token mention]
   (println "not implemented"))
 
