@@ -9,11 +9,7 @@
 
 (deftest a-test
   (testing "get-access-token gets an access token."
-    (println (:client_id typetalk-creds))    
-    (println (:client_secret typetalk-creds))
     (let [token (get-access-token (:client_id typetalk-creds)
                                   (:client_secret typetalk-creds)
                                   "topic.read,topic.post,my")]
       (is (not (nil? (token "access_token")))))))
-
-
