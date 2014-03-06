@@ -65,13 +65,35 @@
       (is (not (nil? (res "topic"))))
       )))
 
+(defn- first-topic [access-token]
+  (let [topics ((get-topics access-token) "topics")]
+     ((first topics) "topic")))
+
+(defn- first-topic-posts [access-token]
+  (->> (first-topic access-token)
+       (get-posts access-token)
+       (#(% "posts"))))
+
+(defn- first-topic-posts-count [access-token]
+  (count (first-topic-posts access-token)))
+
+(defn- first-post [access-token]
+  (let [topic (first-topic access-token)
+        posts (get-posts access-token topic)]
+    (first (posts "posts"))))
+
 (deftest test-get-post
   (testing "get-post"
-    (let [topics ((get-topics access-token) "topics")
-          topic ((first topics) "topic")
-          posts (get-posts access-token topic)
-          post (first (posts "posts"))
+    (let [post (first-post access-token)
           res (get-post access-token post)]
       (is (not (nil? (res "post"))))
       (is (= (get-in res ["post" "id"]) (post "id")))
+      )))
+
+(deftest test-delete-post
+  (testing "delete-post"
+    (let [n (first-topic-posts-count access-token)
+          post (first-post access-token)
+          res  (delete-post access-token post)]
+      (is (= (dec n) (first-topic-posts-count access-token)))
       )))
