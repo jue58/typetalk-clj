@@ -55,3 +55,13 @@
         (is (not (nil? (post "account"))))
         (is (not (nil? (post "url"))))
         ))))
+
+(deftest test-create-posts
+  (testing "create-posts"
+    (let [topics ((get-topics access-token) "topics")
+          topic ((first topics) "topic")
+          res (create-post access-token topic (str "テストです。こんにちは。" (java.util.Date.)))]
+      (is (not (nil? (res "post"))))
+      (is (not (nil? (res "topic"))))
+      )))
+
