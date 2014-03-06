@@ -82,6 +82,9 @@
         posts (get-posts access-token topic)]
     (first (posts "posts"))))
 
+(defn likes [post]
+  (post "likes"))
+
 (deftest test-get-post
   (testing "get-post"
     (let [post (first-post access-token)
@@ -97,3 +100,22 @@
           res  (delete-post access-token post)]
       (is (= (dec n) (first-topic-posts-count access-token)))
       )))
+
+(deftest test-create-like
+  (testing "create-like"
+    (let [post (first-post access-token)
+          res   (create-like access-token post)
+          post2 ((get-post access-token post) "post")]
+      (is (< (count (likes post))
+             (count (likes post2))))
+      )))
+
+(deftest test-delete-like
+  (testing "delete-like"
+    (let [post (first-post access-token)
+          res  (delete-like access-token post)
+          post2 ((get-post access-token post) "post")]
+      (is (> (count (likes post)))
+             (count (likes post2)))
+      )))
+
