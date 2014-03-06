@@ -65,3 +65,13 @@
       (is (not (nil? (res "topic"))))
       )))
 
+(deftest test-get-post
+  (testing "get-post"
+    (let [topics ((get-topics access-token) "topics")
+          topic ((first topics) "topic")
+          posts (get-posts access-token topic)
+          post (first (posts "posts"))
+          res (get-post access-token post)]
+      (is (not (nil? (res "post"))))
+      (is (= (get-in res ["post" "id"]) (post "id")))
+      )))
