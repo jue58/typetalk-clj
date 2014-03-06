@@ -26,3 +26,18 @@
         (is (not (nil? (get-in profile ["account" "fullName"]))))
         (is (not (nil? (get-in profile ["account" "imageUrl"]))))
         ))))
+
+(deftest test-get-topics
+  (let [token (get-access-token (:client_id typetalk-creds)
+                                (:client_secret typetalk-creds)
+                                "my")
+        access_token (token "access_token")]
+    (testing "profile has name and some other properties"
+      (let [res (get-topics access_token)]
+        (is (not (nil? (res "topics"))))
+        (is (> (count (res "topics")) 0))
+        (doseq [topic (res "topics")]
+          (is (not (nil? (topic "topic"))))
+          (is (not (nil? (get-in topic ["topic" "id"]))))
+          (is (not (nil? (get-in topic ["topic" "name"]))))
+          )))))
