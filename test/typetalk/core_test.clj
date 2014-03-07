@@ -119,3 +119,26 @@
              (count (likes post2)))
       )))
 
+(deftest test-create-favorite
+  (testing "create-favorite"
+    (let [topic (first-topic access-token)
+          res   (create-favorite access-token topic)
+          topic2 (first-topic access-token)]
+      (println topic2)
+      )))
+
+(deftest test-delete-favorite
+  (testing "delete-favorite"
+    (let [topic (first-topic access-token)
+          res (delete-favorite access-token topic)]
+      (println "---")
+      (println res)
+      )))
+
+(deftest test-get-notifications
+  (testing "get-notifications"
+    (let [res (get-notifications access-token)]
+      (println res)
+)))
+
+
