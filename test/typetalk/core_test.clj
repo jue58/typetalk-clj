@@ -56,8 +56,8 @@
         (is (not (nil? (post "url"))))
         ))))
 
-(deftest test-create-posts
-  (testing "create-posts"
+(deftest test-create-post
+  (testing "create-post"
     (let [topics ((get-topics access-token) "topics")
           topic ((first topics) "topic")
           res (create-post access-token topic (str "テストです。こんにちは。" (java.util.Date.)))]

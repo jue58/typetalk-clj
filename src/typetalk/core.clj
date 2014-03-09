@@ -10,11 +10,9 @@
                 {:client_id client_id
                  :client_secret client_secret
                  :grant_type "client_credentials"
-                 :scope scope}})
-        status (:status res)
-        body (:body res)]
-    (if (= status 200)
-      (json/read-str body))))
+                 :scope scope}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
 
 (defn authorization-url [client_id redirect_uri scope]
   (format "https://typetalk.in/oauth2/authorize?client_id=%s&redirect_uri=%s&scope=code"
@@ -28,17 +26,15 @@
                 {:client_id client_id
                  :client_secret client_secret
                  :grant_type "refresh_token"
-                 :refresh_token refresh_token}})
-        status (:status res)
-        body (:body res)]
-    (if (= status 200)
-      (json/read-str body))))
+                 :refresh_token refresh_token}})]
+    (if (= 200 (:status res))
+      (json/read-str (:body res)))))
 
 (defn get-profile [access_token]
   "Fetch the user profile of the user who got the given access token"
   (let [res (http/get
               "https://typetalk.in/api/v1/profile"
-              {:query-params {:access_token access_token}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
@@ -46,36 +42,36 @@
   "Fetch topics"
   (let [res (http/get
               "https://typetalk.in/api/v1/topics"
-              {:query-params {:access_token access_token}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
 (defn get-posts [access_token topic]
   (let [res (http/get
               (str "https://typetalk.in/api/v1/topics/" (topic "id"))
-              {:query-params {:access_token access_token}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)) "posts")))
 
 (defn create-post [access_token topic message]
   (let [res (http/post
               (str "https://typetalk.in/api/v1/topics/" (topic "id"))
-              {:form-params
-                {:message message :access_token access_token}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}
+               :form-params {:message message}})]
     (if (= (:status res) 200)
       (json/read-str (:body res)))))
 
 (defn get-post [access_token post]
   (let [res (http/get
               (str "https://typetalk.in/api/v1/topics/" (post "topicId") "/posts/" (post "id"))
-              {:query-params {:access_token access_token}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
 (defn delete-post [access_token post]
   (let [res (http/delete
               (str "https://typetalk.in/api/v1/topics/" (post "topicId") "/posts/" (post "id"))
-              {:query-params {:access_token access_token}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
@@ -121,7 +117,7 @@
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
-(defn open-notifications [access_token topic &]
+(defn open-notifications [access_token topic]
   "scope: my"
   (let [res (http/put
               (str "https://typetalk.in/api/v1/notifications/open")
@@ -133,8 +129,8 @@
   "scope: my"
   (let [res (http/post
               (str "https://typetalk.in/api/v1/bookmark/save")
-              {:headers {"Authorization" (str "Bearer " access_token)}}
-              {:form-params {:topicId (topic "id")}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}
+               :form-params {:topicId (topic "id")}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
@@ -142,8 +138,8 @@
   "scope: my"
   (let [res (http/post
               (str "https://typetalk.in/api/v1/bookmark/save")
-              {:headers {"Authorization" (str "Bearer " access_token)}}
-              {:form-params {:topicId (post "topicId") :postId (post "id")}})]
+              {:headers {"Authorization" (str "Bearer " access_token)}
+               :form-params {:topicId (post "topicId") :postId (post "id")}})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
@@ -151,8 +147,8 @@
   "scope: my"
   (let [res (http/get
               (str "https://typetalk.in/api/v1/mentions")
-              {:headers {"Authorization" (str "Bearer " access_token)}}
-              {:query-params (hash-map options)})]
+              {:headers {"Authorization" (str "Bearer " access_token)}
+               :query-params (hash-map options)})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
