@@ -131,7 +131,6 @@
   (testing "delete-favorite"
     (let [topic (first-topic access-token)
           res (delete-favorite access-token topic)]
-      (println "---")
       (println res)
       )))
 
@@ -139,6 +138,38 @@
   (testing "get-notifications"
     (let [res (get-notifications access-token)]
       (println res)
-)))
+      )))
 
+(deftest test-open-notifications
+  (testing "open-notifications"
+    (let [topic (first-topic access-token)
+          res (open-notifications access-token topic)]
+      (println res))))
 
+(deftest test-mark-topic-as-read
+  (testing "mark-topic-as-read"
+    (let [topic (first-topic access-token)
+          res (mark-topic-as-read access-token topic)]
+      (println res))))
+
+(deftest test-mark-post-as-read
+  (testing "mark-post-as-read"
+    (let [post (first-post access-token)
+          res (mark-post-as-read access-token post)]
+      (println res))))
+
+(deftest test-get-mentions
+  (testing "get-mentions"
+    (let [res (get-mentions access-token)]
+      (println res)
+      )))
+
+(defn- get-first-mention [access-token]
+  (first (get-mentions access-token)))
+
+(deftest test-mark-mention-as-read
+  (testing "mark-mention-as-read"
+    (let [mention (get-first-mention access-token)
+           res (get-mentions access-token)]
+      (println res)
+      )))

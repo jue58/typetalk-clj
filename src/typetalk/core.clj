@@ -148,7 +148,7 @@
   (let [res (http/get
               (str "https://typetalk.in/api/v1/mentions")
               {:headers {"Authorization" (str "Bearer " access_token)}
-               :query-params (hash-map options)})]
+               :query-params (apply hash-map options)})]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
