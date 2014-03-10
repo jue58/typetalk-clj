@@ -69,16 +69,16 @@
       (json/read-str (:body res)))))
 
 
-(defn get-profile [access_token]
+(defn get-profile [access-token]
   "Fetch the user profile of the user who got the given access token"
-  (get-api access_token "profile"))
+  (get-api access-token "profile"))
 
-(defn get-topics [access_token]
+(defn get-topics [access-token]
   "Fetch topics"
-  (get-api access_token "topics"))
+  (get-api access-token "topics"))
 
-(defn get-posts [access_token topic]
-  (get-api access_token
+(defn get-posts [access-token topic]
+  (get-api access-token
            (str "topics/" (topic "id"))))
 
 (defn create-post [access-token topic message]
@@ -86,8 +86,8 @@
             (str "topics/" (topic "id"))
             {:message message}))
 
-(defn get-post [access_token post]
-  (get-api access_token
+(defn get-post [access-token post]
+  (get-api access-token
            (str "topics/" (post "topicId") "/posts/" (post "id"))))
 
 (defn delete-post [access-token post]
@@ -118,9 +118,9 @@
   (delete-api access-token
               (format "topics/%s/favorite" (topic "id"))))
 
-(defn get-notifications [access_token]
+(defn get-notifications [access-token]
   "scope: my"
-  (get-api access_token "notifications/status"))
+  (get-api access-token "notifications/status"))
 
 (defn open-notifications [access-token topic]
   "scope: my"
@@ -142,6 +142,6 @@
   "scope: my"
   (get-api access-token "mentions" :query-params (apply hash-map options)))
 
-(defn mark-mention-as-read [access_token mention]
+(defn mark-mention-as-read [access-token mention]
   "scope: my"
   (put-api (str "mentions/" (mention "id"))))
