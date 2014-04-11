@@ -56,15 +56,6 @@
         (is (not (nil? (post "url"))))
         ))))
 
-(deftest test-create-post
-  (testing "create-post"
-    (let [topics ((get-topics access-token) "topics")
-          topic ((first topics) "topic")
-          res (create-post access-token topic (str "テストです。こんにちは。" (java.util.Date.)))]
-      (is (not (nil? (res "post"))))
-      (is (not (nil? (res "topic"))))
-      )))
-
 (defn- first-topic [access-token]
   (let [topics ((get-topics access-token) "topics")]
      ((first topics) "topic")))
@@ -84,6 +75,25 @@
 
 (defn likes [post]
   (post "likes"))
+
+(deftest test-create-post
+  (testing "create-post"
+    (let [topics ((get-topics access-token) "topics")
+          topic ((first topics) "topic")
+          res (create-post access-token topic (str "テストです。こんにちは。" (java.util.Date.)))]
+      (is (not (nil? (res "post"))))
+      (is (not (nil? (res "topic"))))
+      )))
+
+(deftest test-upload-file
+  (testing "upload-file"
+    (let [topic (first-topic access-token)
+          res (upload-file access-token (topic "id") "./test-data/logo.png" "image/png" "logo")]
+      (println res)
+      (let [fileKey (res "fileKey")
+            topic (first-topic access-token)
+            res (create-post access-token topic "add file" {:fileKeys [fileKey]})]
+        (println res)))))
 
 (deftest test-get-post
   (testing "get-post"

@@ -16,23 +16,27 @@
             :form-params params})))
 
 (defn- get-api [access-token path & params]
+  "GET request"
   (let [res (get-request access-token path (apply hash-map params))]
     (if (= 200 (:status res))
       (json/read-str (:body res)))))
 
 (defn- post-api [access-token path params]
+  "POST request"
+  (println params)
   (let [res (post-request access-token path params)]
     (if (= (:status res) 200)
       (json/read-str (:body res)))))
 
-(defn delete-api [access-token path]
+(defn- delete-api [access-token path]
+  "DELETE request"
   (let [res (http/delete
               (str "https://typetalk.in/api/v1/" path)
               {:headers {"Authorization" (str "Bearer " access-token)}})]
     (if (= (:status res) 200)
       (json/read-str (:body res)))))
 
-(defn put-api [access-token path]
+(defn- put-api [access-token path]
   "scope: my"
   (let [res (http/put
               (str "https://typetalk.in/api/v1/" path)
@@ -81,10 +85,41 @@
   (get-api access-token
            (str "topics/" (topic "id"))))
 
-(defn create-post [access-token topic message]
-  (post-api access-token
-            (str "topics/" (topic "id"))
-            {:message message}))
+(defn create-post
+  ([access-token topic message]
+   (create-post access-token topic message {}))
+  ([access-token topic message options]
+   (println options)
+   (post-api access-token
+             (str "topics/" (topic "id"))
+             (-> {:message message}
+                 (merge (zipmap
+                          (map #(format "fileKeys[%d]" %) (range))
+                          (:fileKeys options)))))))
+
+; (defn create-post
+;   ([access-token topic message]
+;    (create-post access-token topic message {}))
+;   ([access-token topic message options]
+;    (println options)
+;    (post-api access-token
+;              (str "topics/" (topic "id"))
+;              (merge {:message message} options))))
+
+(defn- upload-file* [access-token path multipart-data]
+  (http/post
+    (str "https://typetalk.in/api/v1/" path)
+    {:headers {"Authorization" (str "Bearer " access-token)}
+     :multipart multipart-data}))
+
+(defn upload-file [access-token topic-id filepath content-type filename]
+  (let [res (upload-file* access-token
+                          (str "topics/" topic-id "/attachments")
+                          [{:name "title" :content filename}
+                           {:name "Content/type" :content content-type}
+                           {:name "file" :content (clojure.java.io/file filepath)}])]
+    (if (= (:status res) 200)
+      (json/read-str (:body res)))))
 
 (defn get-post [access-token post]
   (get-api access-token
