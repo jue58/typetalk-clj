@@ -34,7 +34,8 @@
               (str "https://typetalk.in/api/v1/" path)
               {:headers {"Authorization" (str "Bearer " access-token)}})]
     (if (= (:status res) 200)
-      (json/read-str (:body res)))))
+      (json/read-str (:body res))
+      (throw (Exception. (str res))))))
 
 (defn- put-api [access-token path]
   "scope: my"
@@ -81,30 +82,21 @@
   "Fetch topics"
   (get-api access-token "topics"))
 
-(defn get-posts [access-token topic]
+(defn get-posts [access-token topic-id]
   (get-api access-token
-           (str "topics/" (topic "id"))))
+           (str "topics/" topic-id)))
 
 (defn create-post
-  ([access-token topic message]
-   (create-post access-token topic message {}))
-  ([access-token topic message options]
+  ([access-token topic-id message]
+   (create-post access-token topic-id message {}))
+  ([access-token topic-id message options]
    (println options)
    (post-api access-token
-             (str "topics/" (topic "id"))
+             (str "topics/" topic-id)
              (-> {:message message}
                  (merge (zipmap
                           (map #(format "fileKeys[%d]" %) (range))
                           (:fileKeys options)))))))
-
-; (defn create-post
-;   ([access-token topic message]
-;    (create-post access-token topic message {}))
-;   ([access-token topic message options]
-;    (println options)
-;    (post-api access-token
-;              (str "topics/" (topic "id"))
-;              (merge {:message message} options))))
 
 (defn- upload-file* [access-token path multipart-data]
   (http/post
@@ -121,62 +113,62 @@
     (if (= (:status res) 200)
       (json/read-str (:body res)))))
 
-(defn get-post [access-token post]
+(defn get-post [access-token token-id post-id]
   (get-api access-token
-           (str "topics/" (post "topicId") "/posts/" (post "id"))))
+           (str "topics/" token-id "/posts/" post-id)))
 
-(defn delete-post [access-token post]
+(defn delete-post [access-token topic-id post-id]
   (delete-api access-token
-              (str "topics/" (post "topicId") "/posts/" (post "id"))))
+              (str "topics/" topic-id "/posts/" post-id)))
 
-(defn create-like [access-token post]
+(defn create-like [access-token topic-id post-id]
   "Adds LIKE to a post
    scope: topic.post"
   (post-api access-token
-            (format "topics/%s/posts/%s/like" (post "topicId") (post "id"))
+            (format "topics/%s/posts/%s/like" topic-id post-id)
             {}))
 
-(defn delete-like [access-token post]
+(defn delete-like [access-token topic-id post-id]
   "Deletes LIKE to a post
    scope: topic.post"
   (delete-api access-token
-              (format "topics/%s/posts/%s/like" (post "topicId") (post "id"))))
+              (format "topics/%s/posts/%s/like" topic-id post-id)))
 
-(defn create-favorite [access-token topic]
+(defn create-favorite [access-token topic-id]
   "scope: my"
   (post-api access-token
-            (format "topics/%s/favorite" (topic "id"))
+            (format "topics/%s/favorite" topic-id)
             {}))
 
-(defn delete-favorite [access-token topic]
+(defn delete-favorite [access-token topic-id]
   "scope: my"
   (delete-api access-token
-              (format "topics/%s/favorite" (topic "id"))))
+              (format "topics/%s/favorite" topic-id)))
 
 (defn get-notifications [access-token]
   "scope: my"
   (get-api access-token "notifications/status"))
 
-(defn open-notifications [access-token topic]
+(defn open-notifications [access-token]
   "scope: my"
   (put-api access-token "notifications/open"))
 
-(defn mark-topic-as-read [access-token topic]
+(defn mark-topic-as-read [access-token topic-id]
   "scope: my"
   (post-api access-token
             "bookmark/save"
-            {:topicId (topic "id")}))
+            {:topicId topic-id}))
 
-(defn mark-post-as-read [access-token post]
+(defn mark-post-as-read [access-token topic-id post-id]
   "scope: my"
   (post-api access-token
             "bookmark/save"
-            {:topicId (post "topicId") :postId (post "id")}))
+            {:topicId topic-id :postId post-id}))
 
 (defn get-mentions [access-token & options]
   "scope: my"
   (get-api access-token "mentions" :query-params (apply hash-map options)))
 
-(defn mark-mention-as-read [access-token mention]
+(defn mark-mention-as-read [access-token mention-id]
   "scope: my"
-  (put-api (str "mentions/" (mention "id"))))
+  (put-api (str "mentions/" mention-id)))

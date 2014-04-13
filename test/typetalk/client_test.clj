@@ -85,8 +85,6 @@
     (let [post (first-post access-token)
           res (get-post access-token post)]
       (is (not (nil? res)))
-      (println "----")
-      (println res)
       (is (= (res "id") (post "id")))
       )))
 

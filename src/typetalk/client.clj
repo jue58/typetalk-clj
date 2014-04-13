@@ -27,36 +27,36 @@
       (->topics)))
 
 (defn get-posts [access_token topic]
-  (-> (core/get-posts (token access_token) topic)
+  (-> (core/get-posts (token access_token) (topic "id"))
       (get "posts")))
 
 (defn create-post [access_token topic message]
-  (core/create-post (token access_token) topic message))
+  (core/create-post (token access_token) (topic "id") message))
 
 (defn get-post [access_token post]
-  (-> (core/get-post (token access_token) post)
+  (-> (core/get-post (token access_token) (post "topicId") (post "id"))
       (get "post")))
 
 (defn delete-post [access_token post]
-  (core/delete-post (token access_token) post))
+  (core/delete-post (token access_token) (post "topicId") (post "id")))
 
 (defn create-like [access_token post]
   "Adds LIKE to a post
    scope: topic.post"
-  (core/create-like (token access_token) post))
+  (core/create-like (token access_token) (post "topicId") (post "id")))
 
 (defn delete-like [access_token post]
   "Deletes LIKE to a post
    scope: topic.post"
-  (core/delete-like (token access_token) post))
+  (core/delete-like (token access_token) (post "topicId") (post "id")))
 
 (defn create-favorite [access_token topic]
   "scope: my"
-  (core/create-favorite (token access_token) topic))
+  (core/create-favorite (token access_token) (topic "id")))
 
 (defn delete-favorite [access_token topic]
   "scope: my"
-  (core/delete-favorite (token access_token) topic))
+  (core/delete-favorite (token access_token) (topic "id")))
 
 (defn get-notifications [access_token]
   "scope: my"
@@ -64,15 +64,15 @@
 
 (defn open-notifications [access_token topic]
   "scope: my"
-  (core/open-notifications (token access_token) topic))
+  (core/open-notifications (token access_token)))
 
 (defn mark-topic-as-read [access_token topic]
   "scope: my"
-  (core/mark-topic-as-read (token access_token) topic))
+  (core/mark-topic-as-read (token access_token) (topic "id")))
 
 (defn mark-post-as-read [access_token post]
   "scope: my"
-  (core/mark-post-as-read (token access_token) post))
+  (core/mark-post-as-read (token access_token) (post "topicId") (post "id")))
 
 (defn get-mentions [access_token & options]
   "scope: my"
@@ -80,4 +80,4 @@
 
 (defn mark-mention-as-read [access_token mention]
   "scope: my"
-  (core/mark-mention-as-read (token access_token) mention))
+  (core/mark-mention-as-read (token access_token) (mention "id")))

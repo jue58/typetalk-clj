@@ -45,7 +45,7 @@
   (testing "get-posts"
     (let [topics ((get-topics access-token) "topics")
           topic ((first topics) "topic")
-          res (get-posts access-token topic)]
+          res (get-posts access-token (topic "id"))]
       (is (not (nil? (res "posts"))))
       (is (> (count (res "posts")) 0))
       (doseq [post (res "posts")]
@@ -61,7 +61,7 @@
      ((first topics) "topic")))
 
 (defn- first-topic-posts [access-token]
-  (->> (first-topic access-token)
+  (->> (get (first-topic access-token) "id")
        (get-posts access-token)
        (#(% "posts"))))
 
@@ -70,7 +70,7 @@
 
 (defn- first-post [access-token]
   (let [topic (first-topic access-token)
-        posts (get-posts access-token topic)]
+        posts (get-posts access-token (topic "id"))]
     (first (posts "posts"))))
 
 (defn likes [post]
@@ -80,7 +80,7 @@
   (testing "create-post"
     (let [topics ((get-topics access-token) "topics")
           topic ((first topics) "topic")
-          res (create-post access-token topic (str "テストです。こんにちは。" (java.util.Date.)))]
+          res (create-post access-token (topic "id") (str "テストです。こんにちは。" (java.util.Date.)))]
       (is (not (nil? (res "post"))))
       (is (not (nil? (res "topic"))))
       )))
@@ -92,13 +92,13 @@
       (println res)
       (let [fileKey (res "fileKey")
             topic (first-topic access-token)
-            res (create-post access-token topic "add file" {:fileKeys [fileKey]})]
+            res (create-post access-token (topic "id") "add file" {:fileKeys [fileKey]})]
         (println res)))))
 
 (deftest test-get-post
   (testing "get-post"
     (let [post (first-post access-token)
-          res (get-post access-token post)]
+          res (get-post access-token (post "topicId") (post "id"))]
       (is (not (nil? (res "post"))))
       (is (= (get-in res ["post" "id"]) (post "id")))
       )))
@@ -107,15 +107,15 @@
   (testing "delete-post"
     (let [n (first-topic-posts-count access-token)
           post (first-post access-token)
-          res  (delete-post access-token post)]
+          res  (delete-post access-token (post "topicId") (post "id"))]
       (is (= (dec n) (first-topic-posts-count access-token)))
       )))
 
 (deftest test-create-like
   (testing "create-like"
     (let [post (first-post access-token)
-          res   (create-like access-token post)
-          post2 ((get-post access-token post) "post")]
+          res   (create-like access-token (post "topicId") (post "id"))
+          post2 ((get-post access-token (post "topicId") (post "id")) "post")]
       (is (< (count (likes post))
              (count (likes post2))))
       )))
@@ -123,8 +123,8 @@
 (deftest test-delete-like
   (testing "delete-like"
     (let [post (first-post access-token)
-          res  (delete-like access-token post)
-          post2 ((get-post access-token post) "post")]
+          res  (delete-like access-token (post "topicId") (post "id"))
+          post2 ((get-post access-token (post "topicId") (post "id")) "post")]
       (is (> (count (likes post)))
              (count (likes post2)))
       )))
@@ -132,7 +132,7 @@
 (deftest test-create-favorite
   (testing "create-favorite"
     (let [topic (first-topic access-token)
-          res   (create-favorite access-token topic)
+          res   (create-favorite access-token (topic "id"))
           topic2 (first-topic access-token)]
       (println topic2)
       )))
@@ -140,7 +140,7 @@
 (deftest test-delete-favorite
   (testing "delete-favorite"
     (let [topic (first-topic access-token)
-          res (delete-favorite access-token topic)]
+          res (delete-favorite access-token (topic "id"))]
       (println res)
       )))
 
@@ -153,19 +153,19 @@
 (deftest test-open-notifications
   (testing "open-notifications"
     (let [topic (first-topic access-token)
-          res (open-notifications access-token topic)]
+          res (open-notifications access-token)]
       (println res))))
 
 (deftest test-mark-topic-as-read
   (testing "mark-topic-as-read"
     (let [topic (first-topic access-token)
-          res (mark-topic-as-read access-token topic)]
+          res (mark-topic-as-read access-token (topic "id"))]
       (println res))))
 
 (deftest test-mark-post-as-read
   (testing "mark-post-as-read"
     (let [post (first-post access-token)
-          res (mark-post-as-read access-token post)]
+          res (mark-post-as-read access-token (post "topicId") (post "id"))]
       (println res))))
 
 (deftest test-get-mentions
