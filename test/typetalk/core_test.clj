@@ -27,8 +27,7 @@
       (is (not (nil? (profile "account"))))
       (is (not (nil? (get-in profile ["account" "name"]))))
       (is (not (nil? (get-in profile ["account" "fullName"]))))
-      (is (not (nil? (get-in profile ["account" "imageUrl"]))))
-      )))
+      (is (not (nil? (get-in profile ["account" "imageUrl"])))))))
 
 (deftest test-get-topics
   (testing "get-topics"
@@ -38,8 +37,7 @@
       (doseq [topic (res "topics")]
         (is (not (nil? (topic "topic"))))
         (is (not (nil? (get-in topic ["topic" "id"]))))
-        (is (not (nil? (get-in topic ["topic" "name"]))))
-        ))))
+        (is (not (nil? (get-in topic ["topic" "name"]))))))))
 
 (deftest test-get-posts
   (testing "get-posts"
@@ -53,8 +51,7 @@
         (is (not (nil? (post "topicId"))))
         (is (not (nil? (post "message"))))
         (is (not (nil? (post "account"))))
-        (is (not (nil? (post "url"))))
-        ))))
+        (is (not (nil? (post "url"))))))))
 
 (defn- first-topic [access-token]
   (let [topics ((get-topics access-token) "topics")]
@@ -82,8 +79,7 @@
           topic ((first topics) "topic")
           res (create-post access-token (topic "id") (str "テストです。こんにちは。" (java.util.Date.)))]
       (is (not (nil? (res "post"))))
-      (is (not (nil? (res "topic"))))
-      )))
+      (is (not (nil? (res "topic")))))))
 
 (deftest test-upload-file
   (testing "upload-file"
@@ -100,16 +96,14 @@
     (let [post (first-post access-token)
           res (get-post access-token (post "topicId") (post "id"))]
       (is (not (nil? (res "post"))))
-      (is (= (get-in res ["post" "id"]) (post "id")))
-      )))
+      (is (= (get-in res ["post" "id"]) (post "id"))))))
 
 (deftest test-delete-post
   (testing "delete-post"
     (let [n (first-topic-posts-count access-token)
           post (first-post access-token)
           res  (delete-post access-token (post "topicId") (post "id"))]
-      (is (= (dec n) (first-topic-posts-count access-token)))
-      )))
+      (is (= (dec n) (first-topic-posts-count access-token))))))
 
 (deftest test-create-like
   (testing "create-like"
@@ -117,8 +111,7 @@
           res   (create-like access-token (post "topicId") (post "id"))
           post2 ((get-post access-token (post "topicId") (post "id")) "post")]
       (is (< (count (likes post))
-             (count (likes post2))))
-      )))
+             (count (likes post2)))))))
 
 (deftest test-delete-like
   (testing "delete-like"
@@ -126,29 +119,25 @@
           res  (delete-like access-token (post "topicId") (post "id"))
           post2 ((get-post access-token (post "topicId") (post "id")) "post")]
       (is (> (count (likes post)))
-             (count (likes post2)))
-      )))
+             (count (likes post2))))))
 
 (deftest test-create-favorite
   (testing "create-favorite"
     (let [topic (first-topic access-token)
           res   (create-favorite access-token (topic "id"))
           topic2 (first-topic access-token)]
-      (println topic2)
-      )))
+      (println topic2))))
 
 (deftest test-delete-favorite
   (testing "delete-favorite"
     (let [topic (first-topic access-token)
           res (delete-favorite access-token (topic "id"))]
-      (println res)
-      )))
+      (println res))))
 
 (deftest test-get-notifications
   (testing "get-notifications"
     (let [res (get-notifications access-token)]
-      (println res)
-      )))
+      (println res))))
 
 (deftest test-open-notifications
   (testing "open-notifications"
@@ -171,8 +160,7 @@
 (deftest test-get-mentions
   (testing "get-mentions"
     (let [res (get-mentions access-token)]
-      (println res)
-      )))
+      (println res))))
 
 (defn- get-first-mention [access-token]
   (first (get-mentions access-token)))
@@ -181,5 +169,4 @@
   (testing "mark-mention-as-read"
     (let [mention (get-first-mention access-token)
            res (get-mentions access-token)]
-      (println res)
-      )))
+      (println res))))
