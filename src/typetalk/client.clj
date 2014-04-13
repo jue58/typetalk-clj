@@ -14,28 +14,25 @@
 
 (defn get-profile [access_token]
   "Fetch the user profile of the user who got the given access token"
-  (-> (core/get-profile (token access_token))
-      (get "account")))
+  (get (core/get-profile (token access_token)) "account"))
 
 (defn- ->topics [raw-topics]
-  (->> (get raw-topics "topics")
-       (map #(get % "topic"))))
+  (map #(% "topic") (raw-topics "topics")))
 
 (defn get-topics [access_token]
   "Fetch topics"
-  (-> (core/get-topics (token access_token))
-      (->topics)))
+  (->topics (core/get-topics (token access_token))))
 
 (defn get-posts [access_token topic]
-  (-> (core/get-posts (token access_token) (topic "id"))
-      (get "posts")))
+  (get (core/get-posts (token access_token) (topic "id"))
+       "posts"))
 
 (defn create-post [access_token topic message]
   (core/create-post (token access_token) (topic "id") message))
 
 (defn get-post [access_token post]
-  (-> (core/get-post (token access_token) (post "topicId") (post "id"))
-      (get "post")))
+  (get (core/get-post (token access_token) (post "topicId") (post "id"))
+       "post"))
 
 (defn delete-post [access_token post]
   (core/delete-post (token access_token) (post "topicId") (post "id")))

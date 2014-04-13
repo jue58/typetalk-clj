@@ -93,10 +93,11 @@
    (println options)
    (post-api access-token
              (str "topics/" topic-id)
-             (-> {:message message}
-                 (merge (zipmap
-                          (map #(format "fileKeys[%d]" %) (range))
-                          (:fileKeys options)))))))
+             (merge
+               {:message message}
+               (zipmap
+                 (map #(format "fileKeys[%d]" %) (range))
+                 (:fileKeys options))))))
 
 (defn- upload-file* [access-token path multipart-data]
   (http/post

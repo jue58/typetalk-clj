@@ -6,5 +6,6 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [clj-http "0.9.0"]
                  [org.clojure/data.json "0.2.4"]]
-  :plugins [[lein-environ "0.4.0"]]
+  :plugins [[lein-environ "0.4.0"]
+            [lein-kibit "0.0.8"]]
   :profiles {:dev {:dependencies [[environ "0.4.0"]]}})
