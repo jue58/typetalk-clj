@@ -106,7 +106,7 @@ A Clojure library designed to ... well, that part is up to you.
 ```
  
 
-### (open-notifications access-token topic)
+### open-notifications
 
 ```clojure
 (open-notifications access-token topic)
