@@ -53,7 +53,7 @@ A Clojure library designed to ... well, that part is up to you.
 ### create-post
 
 ```clojure
-(create-post access_token topic message)
+(create-post access-token topic message)
 ```
 
 
@@ -88,14 +88,14 @@ A Clojure library designed to ... well, that part is up to you.
 ### create-favorite
 
 ```clojure
-(create-favorite access_token topic)
+(create-favorite access-token topic)
 ```
 
 
 ### delete-favorite
 
 ```clojure
-(delete-favorite access_token topic)
+(delete-favorite access-token topic)
 ```
 
 
@@ -106,37 +106,37 @@ A Clojure library designed to ... well, that part is up to you.
 ```
  
 
-### (open-notifications access_token topic)
+### (open-notifications access-token topic)
 
 ```clojure
-(open-notifications access_token topic)
+(open-notifications access-token topic)
 ```
 
 
 ### mark-topic-as-read
 
 ```clojure
-(mark-topic-as-read access_token topic)
+(mark-topic-as-read access-token topic)
 ```
 
 ### mark-post-as-read
 
 ```clojure
-(mark-post-as-read access_token post)
+(mark-post-as-read access-token post)
 ```
 
 
 ### get-mentions
 
 ```clojure
-(get-mentions access_token & options)
+(get-mentions access-token & options)
 ```
 
 
 ### mark-mention-as-read
 
 ```clojure
-(mark-mention-as-read access_token mention)
+(mark-mention-as-read access-token mention)
 ```
 
 
